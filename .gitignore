@@ -6,6 +6,8 @@
 !src/
 !src/**/*.ts
 !src/**/*.tsx
+!*.md
+!WeatherAppHomePageLayout.png
 
 # Node, build, and environment files (for safety)
 node_modules/
@@ -14,7 +16,3 @@ build/
 .env
 .DS_Store
 *.log
-
-# Ignore markdown files and layout image
-*.md
-WeatherAppHomePageLayout.png
