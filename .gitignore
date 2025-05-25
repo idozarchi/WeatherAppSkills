@@ -1,0 +1,16 @@
+# Ignore everything by default
+*
+
+# But not these files/directories:
+!.gitignore
+!src/
+!src/**/*.ts
+!src/**/*.tsx
+
+# Node, build, and environment files (for safety)
+node_modules/
+dist/
+build/
+.env
+.DS_Store
+*.log
