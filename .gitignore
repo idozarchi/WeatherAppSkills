@@ -1,18 +1,38 @@
-# Ignore everything by default
-*
-
-# But not these files/directories:
-!.gitignore
-!src/
-!src/**/*.ts
-!src/**/*.tsx
-!*.md
-!WeatherAppHomePageLayout.png
-
-# Node, build, and environment files (for safety)
+# Node, build, and environment files
 node_modules/
 dist/
 build/
 .env
 .DS_Store
 *.log
+
+# Ignore system files
+Thumbs.db
+
+# Ignore editor directories and files
+.vscode/
+.idea/
+*.swp
+
+# Ignore test coverage
+coverage/
+
+# Ignore production build output
+out/
+
+# Ignore Mac system files
+Icon?
+
+# Don't ignore project files
+!README.md
+!WeatherAppHomePageLayout.png
+!src/
+!public/
+!package.json
+!tsconfig.json
+!tailwind.config.js
+!postcss.config.js
+
+# Don't ignore subfolders in weather_app_front
+!weather_app_front/
+!weather_app_front/**

@@ -34,6 +34,7 @@ public/            # Static assets
 ## Getting Started
 
 1. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -41,6 +42,7 @@ public/            # Static assets
    ```
 
 2. **Start the development server**
+
    ```bash
    npm start
    # or
@@ -57,6 +59,7 @@ public/            # Static assets
 ## Environment Variables
 
 Create a `.env` file in the root directory and add your weather API key:
+
 ```
 REACT_APP_WEATHER_API_KEY=your_api_key_here
 ```
