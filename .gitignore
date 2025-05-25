@@ -14,3 +14,7 @@ build/
 .env
 .DS_Store
 *.log
+
+# Ignore markdown files and layout image
+*.md
+WeatherAppHomePageLayout.png
