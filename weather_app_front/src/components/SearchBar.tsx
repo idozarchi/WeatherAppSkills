@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
+import {
+  searchBarContainerClass,
+  inputClass,
+  searchButtonClass,
+} from "../styles/tailwindStyles";
 
 const SearchBar: React.FC<{ onSearch?: (query: string) => void }> = ({
   onSearch,
@@ -16,18 +21,15 @@ const SearchBar: React.FC<{ onSearch?: (query: string) => void }> = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex items-center space-x-2 w-full max-w-lg mt-8"
-    >
+    <form onSubmit={handleSubmit} className={searchBarContainerClass}>
       <Input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search for a city..."
-        className="w-full"
+        className={inputClass}
       />
-      <Button type="submit" className="w-32">
+      <Button type="submit" className={searchButtonClass}>
         Search
       </Button>
     </form>

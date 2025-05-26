@@ -1,8 +1,9 @@
 import React from "react";
 import HistoryContent from "../components/HistoryContent";
+import { appContainerClass } from "../styles/tailwindStyles";
 
 const History: React.FC = () => (
-  <div className="w-full flex flex-col items-center min-h-screen bg-blue-100">
+  <div className={appContainerClass}>
     <HistoryContent />
   </div>
 );

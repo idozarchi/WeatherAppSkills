@@ -3,6 +3,15 @@ import ScrollArea from "./ui/ScrollArea";
 import getSearchHistory from "../api/getSearchHistory";
 import { Card, CardContent } from "./ui/Card";
 import Sonner from "./ui/Sonner"; // Import the Sonner component
+import {
+  containerClass,
+  cardContentClass,
+  titleClass,
+  scrollAreaClass,
+  loadingTextClass,
+  emptyTextClass,
+  listClass,
+} from "../styles/tailwindStyles";
 
 const USER_ID = "demo-user"; // Replace with real user id if available
 
@@ -18,17 +27,17 @@ const HistoryContent: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-lg mx-auto mt-8">
+    <div className={containerClass}>
       <Card>
-        <CardContent className="p-6">
-          <h2 className="text-2xl font-bold mb-4 mt-4">Search History</h2>
-          <ScrollArea className="bg-white rounded shadow p-4">
+        <CardContent className={cardContentClass}>
+          <h2 className={titleClass}>Search History</h2>
+          <ScrollArea className={scrollAreaClass}>
             {loading ? (
-              <div className="text-gray-400">Loading...</div>
+              <div className={loadingTextClass}>Loading...</div>
             ) : history.length === 0 ? (
-              <div className="text-gray-500">No search history yet.</div>
+              <div className={emptyTextClass}>No search history yet.</div>
             ) : (
-              <ul className="space-y-2">
+              <ul className={listClass}>
                 {history.map((item, idx) => (
                   <li key={idx}>
                     <Sonner>{item}</Sonner>

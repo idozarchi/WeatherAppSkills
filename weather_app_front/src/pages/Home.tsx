@@ -9,6 +9,12 @@ import HistoryContent from "../components/HistoryContent";
 import { getDefaultCity } from "../api/defaultLocation";
 import { fetchWeather } from "../api/weatherData";
 import { useQuery } from "@tanstack/react-query";
+import {
+  appContainerClass,
+  containerClass,
+  loadingTextClass,
+  errorTextClass,
+} from "../styles/tailwindStyles";
 
 const HomeContent: React.FC = () => {
   const { setButtons } = useContext(HeaderContext);
@@ -44,9 +50,7 @@ const HomeContent: React.FC = () => {
     setCity(newCity);
     refetch();
 
-    // Store search in localStorage
     const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-    // Avoid duplicates, case-insensitive
     if (
       !history
         .map((c: string) => c.toLowerCase())
@@ -71,14 +75,16 @@ const HomeContent: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="w-full max-w-lg mx-auto">
+      <div className={containerClass}>
         <SearchBar onSearch={handleSearch} />
         <Routes>
           <Route
             path="/"
             element={
               <>
-                {loading && <div className="mt-8">Loading weather...</div>}
+                {loading && (
+                  <div className={loadingTextClass}>Loading weather...</div>
+                )}
                 {temperature && (
                   <WeatherContent
                     city={city}
@@ -89,7 +95,7 @@ const HomeContent: React.FC = () => {
                   />
                 )}
                 {(isInvalidLocation || isError) && (
-                  <div className="mt-8 text-red-500">
+                  <div className={errorTextClass}>
                     Unable to detect your location. Please search for a city.
                   </div>
                 )}
@@ -106,7 +112,7 @@ const HomeContent: React.FC = () => {
 
 const Home: React.FC = () => (
   <HeaderProvider>
-    <div className="w-full flex flex-col items-center min-h-screen bg-blue-100">
+    <div className={appContainerClass}>
       <HomeContent />
     </div>
   </HeaderProvider>

@@ -5,6 +5,7 @@ const WEATHER_API_URL =
 
 export const fetchWeather = async (city: string) => {
   try {
+    console.log(WEATHER_API_URL);
     const response = await axios.get(`${WEATHER_API_URL}/${city}?format=j1`);
     return response.data;
   } catch (error: any) {
