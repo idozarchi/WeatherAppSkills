@@ -1,78 +1,104 @@
 import React, { useContext, useEffect, useState } from "react";
-import Header from "../components/Header";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Header from "../components/Header/Header";
 import { HeaderProvider, HeaderContext } from "../context/HeaderContext";
 import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
-import WeatherContent from "../components/WeatherContent";
+import WeatherContent from "../components/weather/WeatherContent";
+import HistoryContent from "../components/HistoryContent";
 import { getDefaultCity } from "../api/defaultLocation";
 import { fetchWeather } from "../api/weatherData";
-import { WeatherProvider, WeatherContext } from "../context/WeatherContext";
+import { useQuery } from "@tanstack/react-query";
 
 const HomeContent: React.FC = () => {
   const { setButtons } = useContext(HeaderContext);
-  const {
-    city,
-    setCity,
-    country,
-    setCountry,
-    temperature,
-    setTemperature,
-    feelsLike,
-    setFeelsLike,
-    description,
-    setDescription,
-  } = useContext(WeatherContext);
+  const [city, setCity] = useState("");
+  const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  const {
+    data: weather,
+    isLoading: loading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["weather", city],
+    queryFn: () => (city ? fetchWeather(city) : Promise.resolve(null)),
+    enabled: !!city,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     setButtons([
-      { name: "Home", onClick: () => alert("Home clicked!") },
-      { name: "Search History", onClick: () => alert("Weather clicked!") },
+      { name: "Home", onClick: () => navigate("/") },
+      { name: "Search History", onClick: () => navigate("/history") },
     ]);
-  }, [setButtons]);
+  }, [setButtons, navigate]);
 
   useEffect(() => {
     getDefaultCity().then((defaultCity) => {
       if (defaultCity) setCity(defaultCity);
     });
-  }, [setCity]);
-
-  useEffect(() => {
-    if (city) {
-      setLoading(true);
-      fetchWeather(city)
-        .then((data) => {
-          setTemperature(data.current_condition?.[0]?.temp_C || "");
-          setFeelsLike(data.current_condition?.[0]?.FeelsLikeC || "");
-          setDescription(
-            data.current_condition?.[0]?.weatherDesc?.[0]?.value || ""
-          );
-          setCountry(data.nearest_area?.[0]?.country?.[0]?.value || "");
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [city, setTemperature, setFeelsLike, setDescription, setCountry]);
+  }, []);
 
   const handleSearch = (newCity: string) => {
     setCity(newCity);
+    refetch();
+
+    // Store search in localStorage
+    const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+    // Avoid duplicates, case-insensitive
+    if (
+      !history
+        .map((c: string) => c.toLowerCase())
+        .includes(newCity.toLowerCase())
+    ) {
+      history.unshift(newCity);
+      // Keep only the latest 20 searches
+      localStorage.setItem(
+        "searchHistory",
+        JSON.stringify(history.slice(0, 20))
+      );
+    }
   };
+
+  const temperature = weather?.current_condition?.[0]?.temp_C || "";
+  const feelsLike = weather?.current_condition?.[0]?.FeelsLikeC || "";
+  const description =
+    weather?.current_condition?.[0]?.weatherDesc?.[0]?.value || "";
+  const country = weather?.nearest_area?.[0]?.country?.[0]?.value || "";
+  const isInvalidLocation = city && !loading && !temperature && !isError;
 
   return (
     <>
       <Header />
       <div className="w-full max-w-lg mx-auto">
         <SearchBar onSearch={handleSearch} />
-        {loading && <div className="mt-8">Loading weather...</div>}
-        {(temperature || description || feelsLike || country) && (
-          <WeatherContent />
-        )}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                {loading && <div className="mt-8">Loading weather...</div>}
+                {temperature && (
+                  <WeatherContent
+                    city={city}
+                    country={country}
+                    temperature={temperature}
+                    feelsLike={feelsLike}
+                    description={description}
+                  />
+                )}
+                {(isInvalidLocation || isError) && (
+                  <div className="mt-8 text-red-500">
+                    Unable to detect your location. Please search for a city.
+                  </div>
+                )}
+              </>
+            }
+          />
+          <Route path="/history" element={<HistoryContent />} />
+        </Routes>
       </div>
-      {!loading && !temperature && (
-        <div className="mt-8 text-red-500">
-          Unable to detect your location. Please search for a city.
-        </div>
-      )}
       <Footer />
     </>
   );
@@ -80,11 +106,9 @@ const HomeContent: React.FC = () => {
 
 const Home: React.FC = () => (
   <HeaderProvider>
-    <WeatherProvider>
-      <div className="w-full flex flex-col items-center min-h-screen bg-blue-100">
-        <HomeContent />
-      </div>
-    </WeatherProvider>
+    <div className="w-full flex flex-col items-center min-h-screen bg-blue-100">
+      <HomeContent />
+    </div>
   </HeaderProvider>
 );
 

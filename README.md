@@ -24,9 +24,11 @@ This app allows users to search for weather information by location and view rec
 
 ```
 src/
+  api/            # API utility functions
   components/      # Reusable UI components
   pages/           # App pages (Home, History)
   hooks/           # Custom React hooks
+  styles/         # Centralized Tailwind CSS variables
   utils/           # Utility functions
 public/            # Static assets
 ```

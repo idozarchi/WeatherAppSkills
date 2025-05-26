@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
-import { WeatherContext } from "../../context/WeatherContext";
+import React from "react";
 import { Heading } from "../ui/Typography";
 
-const Location: React.FC = () => {
-  const { city, country } = useContext(WeatherContext);
+const Location: React.FC<{ city: string; country: string }> = ({
+  city,
+  country,
+}) => {
   return (
     <div className="flex flex-col items-begin w-full mb-2">
       <Heading className="text-2xl mb-0">{city || "City Name"}</Heading>

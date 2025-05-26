@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import HistoryContent from "../components/HistoryContent";
 
 const History: React.FC = () => (
-  <div>
-    
+  <div className="w-full flex flex-col items-center min-h-screen bg-blue-100">
+    <HistoryContent />
   </div>
 );
 
