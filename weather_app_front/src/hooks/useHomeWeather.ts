@@ -2,10 +2,29 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getDefaultCity } from "../api/defaultLocation";
 import { fetchWeather } from "../api/weatherData";
+import { useSearchHistory } from "../hooks/useSearchHistory";
+import { Location, NavigateFunction } from "react-router-dom";
 
-export function useHomeWeather({ setButtons, navigate, location }: any) {
+interface ButtonConfig {
+  name: string;
+  onClick: () => void;
+}
+
+interface UseHomeWeatherParams {
+  setButtons: (buttons: ButtonConfig[]) => void;
+  navigate: NavigateFunction;
+  location: Location & { state?: { city?: string } };
+}
+
+export function useHomeWeather({
+  setButtons,
+  navigate,
+  location,
+}: UseHomeWeatherParams) {
   const [city, setCity] = useState("");
   const [isInitializing, setIsInitializing] = useState(true);
+
+  const { addToHistory } = useSearchHistory();
 
   const {
     data: weather,
@@ -45,24 +64,12 @@ export function useHomeWeather({ setButtons, navigate, location }: any) {
 
   const handleSearch = (newCity: string) => {
     setCity(newCity);
-    refetch();
 
     if (location.pathname !== "/") {
       navigate("/");
     }
 
-    const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-    if (
-      !history
-        .map((c: string) => c.toLowerCase())
-        .includes(newCity.toLowerCase())
-    ) {
-      history.unshift(newCity);
-      localStorage.setItem(
-        "searchHistory",
-        JSON.stringify(history.slice(0, 20))
-      );
-    }
+    addToHistory(newCity);
   };
 
   const temperature = weather?.current_condition?.[0]?.temp_C + "°C" || "";

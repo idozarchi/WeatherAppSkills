@@ -1,12 +1,16 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import Header from "../components/Header/Header";
+
 import { HeaderProvider, HeaderContext } from "../context/HeaderContext";
+import Header from "../components/Header/Header";
 import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
 import WeatherContent from "../components/weather/WeatherContent";
 import History from "./History";
 import { useHomeWeather } from "../hooks/useHomeWeather";
+import { Loader } from "../components/ui/Loader";
+import { Error as ErrorComponent } from "../components/ui/Error";
+
 import {
   appContainerClass,
   containerClass,
@@ -40,7 +44,7 @@ const HomeContent: React.FC = () => {
       <div className={containerClass}>
         <SearchBar
           onSearch={handleSearch}
-          placeholder="Search for a city..."
+          placeholder="Search for a location..."
           buttonText="Search"
         />
         <Routes>
@@ -49,7 +53,9 @@ const HomeContent: React.FC = () => {
             element={
               <>
                 {(isInitializing || loading) && (
-                  <div className={loadingTextClass}>Loading weather...</div>
+                  <Loader className={loadingTextClass}>
+                    Loading weather...
+                  </Loader>
                 )}
                 {!isInitializing && !loading && weather && (
                   <WeatherContent
@@ -61,9 +67,9 @@ const HomeContent: React.FC = () => {
                   />
                 )}
                 {!isInitializing && (isInvalidLocation || isError) && (
-                  <div className={errorTextClass}>
-                    Unable to detect your location. Please search for a city.
-                  </div>
+                  <ErrorComponent className={errorTextClass}>
+                    Unable to detect the location. Please search for a city.
+                  </ErrorComponent>
                 )}
               </>
             }
@@ -73,7 +79,7 @@ const HomeContent: React.FC = () => {
       </div>
       <Footer
         footerText={
-          "&" + new Date().getFullYear() + " Weather App. All rights reserved."
+          "@" + new Date().getFullYear() + " Weather App. All rights reserved."
         }
       />
     </>

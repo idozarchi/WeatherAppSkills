@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ScrollArea from "./ui/ScrollArea";
-import getSearchHistory from "../api/getSearchHistory";
 import { Card, CardContent } from "./ui/Card";
 import Sonner from "./ui/Sonner";
 import { Text } from "./ui/Typography";
@@ -14,6 +13,7 @@ import {
   listClass,
 } from "../styles/tailwindStyles";
 import { useNavigate } from "react-router-dom";
+import { useSearchHistory } from "../hooks/useSearchHistory";
 
 interface HistoryContentProps {
   title?: string;
@@ -28,14 +28,13 @@ const HistoryContent: React.FC<HistoryContentProps> = ({
 }) => {
   const [history, setHistory] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const { getHistory } = useSearchHistory();
   const navigate = useNavigate();
 
   useEffect(() => {
-    getSearchHistory().then((data) => {
-      setHistory(data.filter(Boolean));
-      setLoading(false);
-    });
-  }, []);
+    setHistory(getHistory().filter(Boolean));
+    setLoading(false);
+  }, [getHistory]);
 
   const handleHistoryClick = (city: string) => {
     navigate("/", { state: { city } });
