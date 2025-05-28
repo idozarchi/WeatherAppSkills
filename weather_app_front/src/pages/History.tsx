@@ -2,7 +2,7 @@ import React from "react";
 import HistoryContent from "../components/HistoryContent";
 import { appContainerClass } from "../styles/tailwindStyles";
 
-const History: React.FC = () => (
+const History = () => (
   <div className={appContainerClass}>
     <HistoryContent
       title="Your Search History"

@@ -9,13 +9,21 @@ import {
   weatherContentRowClass,
 } from "../../styles/tailwindStyles";
 
-const WeatherContent: React.FC<{
+type WeatherContentProps = {
   city: string;
   country: string;
   temperature: string;
   feelsLike: string;
   description: string;
-}> = ({ city, country, temperature, feelsLike, description }) => (
+};
+
+const WeatherContent = ({
+  city,
+  country,
+  temperature,
+  feelsLike,
+  description,
+}: WeatherContentProps) => (
   <div className={containerClass}>
     <Card>
       <CardContent className={cardContentInnerClass}>
@@ -23,7 +31,7 @@ const WeatherContent: React.FC<{
           <Location city={city} country={country} />
           <Temperatures temperature={temperature} feelsLike={feelsLike} />
         </div>
-        <WeatherDescription description={description} />
+        {description && <WeatherDescription description={description} />}
       </CardContent>
     </Card>
   </div>

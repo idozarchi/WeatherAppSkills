@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { HeaderContext } from "../../context/HeaderContext";
 import { menuButtonClass } from "../../styles/tailwindStyles";
 
-const Menu: React.FC = () => {
+const Menu = () => {
   const { buttons } = useContext(HeaderContext);
 
   return (

@@ -21,11 +21,11 @@ interface HistoryContentProps {
   emptyText?: string;
 }
 
-const HistoryContent: React.FC<HistoryContentProps> = ({
+const HistoryContent = ({
   title = "",
   loadingText = "Loading...",
   emptyText = "Nothing yet...",
-}) => {
+}: HistoryContentProps) => {
   const [history, setHistory] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { getHistory } = useSearchHistory();

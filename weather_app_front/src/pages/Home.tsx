@@ -18,7 +18,7 @@ import {
   errorTextClass,
 } from "../styles/tailwindStyles";
 
-const HomeContent: React.FC = () => {
+const HomeContent = () => {
   const { setButtons } = useContext(HeaderContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -86,7 +86,7 @@ const HomeContent: React.FC = () => {
   );
 };
 
-const Home: React.FC = () => (
+const Home = () => (
   <HeaderProvider>
     <div className={appContainerClass}>
       <HomeContent />

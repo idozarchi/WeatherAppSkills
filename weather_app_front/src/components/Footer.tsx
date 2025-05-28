@@ -6,7 +6,7 @@ interface FooterProps {
   footerText?: string;
 }
 
-const Footer: React.FC<FooterProps> = memo(({ footerText }) => (
+const Footer = memo(({ footerText }: FooterProps) => (
   <footer className={footerClass}>
     <Text className={footerTextClass}>{footerText}</Text>
   </footer>

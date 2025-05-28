@@ -6,16 +6,15 @@ import {
   feelsLikeClass,
 } from "../../styles/tailwindStyles";
 
-const Temperatures: React.FC<{ temperature: string; feelsLike: string }> = ({
-  temperature,
-  feelsLike,
-}) => {
-  return (
-    <div className={temperaturesContainerClass}>
+type TemperaturesProps = { temperature: string; feelsLike: string };
+
+const Temperatures = ({ temperature, feelsLike }: TemperaturesProps) => (
+  <div className={temperaturesContainerClass}>
+    {temperature && (
       <Heading className={temperatureValueClass}>{temperature}</Heading>
-      <span className={feelsLikeClass}>{feelsLike}</span>
-    </div>
-  );
-};
+    )}
+    {feelsLike && <span className={feelsLikeClass}>{feelsLike}</span>}
+  </div>
+);
 
 export default Temperatures;

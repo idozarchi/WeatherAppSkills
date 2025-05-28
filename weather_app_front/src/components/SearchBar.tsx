@@ -13,11 +13,11 @@ interface SearchBarProps {
   buttonText?: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
+const SearchBar = ({
   onSearch,
   placeholder = "",
   buttonText = "Search",
-}) => {
+}: SearchBarProps) => {
   const [query, setQuery] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {

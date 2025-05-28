@@ -3,17 +3,13 @@ import Headline from "./Headline";
 import Menu from "./Menu";
 import { headerClass, headerInnerClass } from "../../styles/tailwindStyles";
 
-const HEADER_FOOTER_HEIGHT = "64px";
-
-const Header: React.FC = memo(() => {
-  return (
-    <header className={headerClass}>
-      <div className={headerInnerClass}>
-        <Headline />
-        <Menu />
-      </div>
-    </header>
-  );
-});
+const Header = memo(() => (
+  <header className={headerClass}>
+    <div className={headerInnerClass}>
+      <Headline />
+      <Menu />
+    </div>
+  </header>
+));
 
 export default Header;

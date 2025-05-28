@@ -6,16 +6,13 @@ import {
   locationCountryClass,
 } from "../../styles/tailwindStyles";
 
-const Location: React.FC<{ city: string; country: string }> = ({
-  city,
-  country,
-}) => {
-  return (
-    <div className={locationContainerClass}>
-      <Heading className={locationCityClass}>{city}</Heading>
-      <span className={locationCountryClass}>{country}</span>
-    </div>
-  );
-};
+type LocationProps = { city: string; country: string };
+
+const Location = ({ city, country }: LocationProps) => (
+  <div className={locationContainerClass}>
+    {city && <Heading className={locationCityClass}>{city}</Heading>}
+    {country && <span className={locationCountryClass}>{country}</span>}
+  </div>
+);
 
 export default Location;

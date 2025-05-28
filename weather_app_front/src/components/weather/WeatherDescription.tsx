@@ -5,9 +5,9 @@ import {
   descriptionClass,
 } from "../../styles/tailwindStyles";
 
-const WeatherDescription: React.FC<{ description: string }> = ({
-  description,
-}) => {
+type WeatherDescriptionProps = { description: string };
+
+const WeatherDescription = ({ description }: WeatherDescriptionProps) => {
   return (
     <div className={descriptionContainerClass}>
       <Text className={descriptionClass}>{description}</Text>

@@ -13,15 +13,15 @@ type HeaderContextType = {
 };
 
 export const HeaderContext = createContext<HeaderContextType>({
-  title: "",
+  title: "Weather App",
   setTitle: () => {},
   buttons: [],
   setButtons: () => {},
 });
 
-export const HeaderProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+type HeaderProviderProps = { children: ReactNode };
+
+export const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [title, setTitle] = useState("Weather App");
   const [buttons, setButtons] = useState<HeaderButton[]>([]);
 

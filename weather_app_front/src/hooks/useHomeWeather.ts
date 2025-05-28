@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getDefaultCity } from "../api/defaultLocation";
 import { fetchWeather } from "../api/weatherData";
@@ -16,6 +16,17 @@ interface UseHomeWeatherParams {
   location: Location & { state?: { city?: string } };
 }
 
+interface WeatherApiResponse {
+  current_condition?: Array<{
+    temp_C?: string;
+    FeelsLikeC?: string;
+    weatherDesc?: Array<{ value: string }>;
+  }>;
+  nearest_area?: Array<{
+    country?: Array<{ value: string }>;
+  }>;
+}
+
 export function useHomeWeather({
   setButtons,
   navigate,
@@ -30,8 +41,7 @@ export function useHomeWeather({
     data: weather,
     isLoading: loading,
     isError,
-    refetch,
-  } = useQuery({
+  } = useQuery<WeatherApiResponse>({
     queryKey: ["weather", city],
     queryFn: () => (city ? fetchWeather(city) : Promise.resolve(null)),
     enabled: !!city,
@@ -52,25 +62,25 @@ export function useHomeWeather({
     });
   }, []);
 
-  // Move the effect for handling city from navigation state here:
+  const handleSearch = useCallback(
+    (newCity: string) => {
+      setCity(newCity);
+
+      if (location.pathname !== "/") {
+        navigate("/");
+      }
+
+      addToHistory(newCity);
+    },
+    [location.pathname, navigate, addToHistory]
+  );
+
   useEffect(() => {
     if (location.state?.city) {
       handleSearch(location.state.city);
-      // Optionally clear the state so it doesn't repeat on next navigation
       window.history.replaceState({}, document.title);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state]);
-
-  const handleSearch = (newCity: string) => {
-    setCity(newCity);
-
-    if (location.pathname !== "/") {
-      navigate("/");
-    }
-
-    addToHistory(newCity);
-  };
+  }, [location.state, handleSearch]);
 
   const temperature = weather?.current_condition?.[0]?.temp_C + "°C" || "";
   const feelsLike =
