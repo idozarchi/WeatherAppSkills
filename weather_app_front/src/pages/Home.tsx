@@ -1,15 +1,12 @@
 import React, { useContext } from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { HeaderProvider, HeaderContext } from "../context/HeaderContext";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
-import WeatherContent from "../components/weather/WeatherContent";
-import History from "./History";
+import HomeRoutes from "../components/HomeRoutes";
 import { useHomeWeather } from "../hooks/useHomeWeather";
-import { Loader } from "../components/ui/Loader";
-import { Error as ErrorComponent } from "../components/ui/Error";
 
 import {
   appContainerClass,
@@ -47,35 +44,20 @@ const HomeContent = () => {
           placeholder="Search for a location..."
           buttonText="Search"
         />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                {(isInitializing || loading) && (
-                  <Loader className={loadingTextClass}>
-                    Loading weather...
-                  </Loader>
-                )}
-                {!isInitializing && !loading && weather && (
-                  <WeatherContent
-                    city={city}
-                    country={country}
-                    temperature={temperature}
-                    feelsLike={feelsLike}
-                    description={description}
-                  />
-                )}
-                {!isInitializing && (isInvalidLocation || isError) && (
-                  <ErrorComponent className={errorTextClass}>
-                    Unable to detect the location. Please search for a city.
-                  </ErrorComponent>
-                )}
-              </>
-            }
-          />
-          <Route path="/history" element={<History />} />
-        </Routes>
+        <HomeRoutes
+          isInitializing={isInitializing}
+          loading={loading}
+          weather={weather}
+          city={city}
+          country={country}
+          temperature={temperature}
+          feelsLike={feelsLike}
+          description={description}
+          isInvalidLocation={!!isInvalidLocation}
+          isError={isError}
+          loadingTextClass={loadingTextClass}
+          errorTextClass={errorTextClass}
+        />
       </div>
       <Footer
         footerText={
