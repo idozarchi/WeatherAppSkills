@@ -21,10 +21,11 @@ export const cardContentClass = "p-6";
 export const cardContentInnerClass = "flex flex-col gap-4 m-2 sm:m-5";
 
 // ====== Titles & Headings ======
-export const titleClass = "text-2xl font-bold mb-4 mt-4";
+export const titleClass = "text-xl sm:text-2xl font-bold mb-4 mt-4";
 
 // ====== Scroll Area & Lists ======
-export const scrollAreaClass = "bg-white rounded shadow p-4";
+export const scrollAreaClass =
+  "bg-white rounded shadow p-4 max-h-60 sm:max-h-96 overflow-y-auto";
 export const listClass = "space-y-2";
 export const listItemClass =
   "text-gray-700 border-b last:border-b-0 pb-2 last:pb-0";
@@ -39,13 +40,13 @@ export const buttonClass =
   "px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition-colors";
 export const menuButtonClass =
   "px-4 py-2 rounded bg-blue-300 text-white hover:bg-blue-400 transition-colors";
-export const searchButtonClass = "w-32";
+export const searchButtonClass = "w-24 sm:w-32";
 export const inputClass = "w-full";
 export const searchBarContainerClass =
   "flex items-center gap-2 w-full max-w-lg mt-8";
 
 // ====== Weather Content ======
-export const weatherContentRowClass = "flex flex-row";
+export const weatherContentRowClass = "flex flex-col sm:flex-row";
 export const weatherValueClass = "text-4xl font-bold";
 export const weatherLabelClass = "text-lg text-gray-500";
 
