@@ -12,8 +12,8 @@ const Location: React.FC<{ city: string; country: string }> = ({
 }) => {
   return (
     <div className={locationContainerClass}>
-      <Heading className={locationCityClass}>{city || "City Name"}</Heading>
-      <span className={locationCountryClass}>{country || "Country"}</span>
+      <Heading className={locationCityClass}>{city}</Heading>
+      <span className={locationCountryClass}>{country}</span>
     </div>
   );
 };

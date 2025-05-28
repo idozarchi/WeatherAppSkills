@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode } from "react";
 
 type HeaderButton = {
   name: string;
@@ -13,14 +13,16 @@ type HeaderContextType = {
 };
 
 export const HeaderContext = createContext<HeaderContextType>({
-  title: '',
+  title: "",
   setTitle: () => {},
   buttons: [],
   setButtons: () => {},
 });
 
-export const HeaderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [title, setTitle] = useState('Weather App');
+export const HeaderProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [title, setTitle] = useState("Weather App");
   const [buttons, setButtons] = useState<HeaderButton[]>([]);
 
   return (

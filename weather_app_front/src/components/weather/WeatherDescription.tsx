@@ -10,9 +10,7 @@ const WeatherDescription: React.FC<{ description: string }> = ({
 }) => {
   return (
     <div className={descriptionContainerClass}>
-      <Text className={descriptionClass}>
-        {description || "Weather description"}
-      </Text>
+      <Text className={descriptionClass}>{description}</Text>
     </div>
   );
 };

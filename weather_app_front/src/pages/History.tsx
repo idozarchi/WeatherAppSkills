@@ -4,7 +4,11 @@ import { appContainerClass } from "../styles/tailwindStyles";
 
 const History: React.FC = () => (
   <div className={appContainerClass}>
-    <HistoryContent />
+    <HistoryContent
+      title="Your Search History"
+      loadingText="Loading your history..."
+      emptyText="You have no search history yet."
+    />
   </div>
 );
 

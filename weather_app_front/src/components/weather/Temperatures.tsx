@@ -12,10 +12,8 @@ const Temperatures: React.FC<{ temperature: string; feelsLike: string }> = ({
 }) => {
   return (
     <div className={temperaturesContainerClass}>
-      <Heading className={temperatureValueClass}>
-        {temperature || "--"}°C
-      </Heading>
-      <span className={feelsLikeClass}>Feels like: {feelsLike || "--"}°C</span>
+      <Heading className={temperatureValueClass}>{temperature}</Heading>
+      <span className={feelsLikeClass}>{feelsLike}</span>
     </div>
   );
 };

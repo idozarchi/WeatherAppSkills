@@ -7,8 +7,16 @@ import {
   searchButtonClass,
 } from "../styles/tailwindStyles";
 
-const SearchBar: React.FC<{ onSearch?: (query: string) => void }> = ({
+interface SearchBarProps {
+  onSearch?: (query: string) => void;
+  placeholder?: string;
+  buttonText?: string;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
+  placeholder = "",
+  buttonText = "Search",
 }) => {
   const [query, setQuery] = useState("");
 
@@ -17,7 +25,7 @@ const SearchBar: React.FC<{ onSearch?: (query: string) => void }> = ({
     if (onSearch) {
       onSearch(query.trim());
     }
-    setQuery(""); // Clear the input after search
+    setQuery("");
   };
 
   return (
@@ -26,11 +34,11 @@ const SearchBar: React.FC<{ onSearch?: (query: string) => void }> = ({
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for a city..."
+        placeholder={placeholder}
         className={inputClass}
       />
       <Button type="submit" className={searchButtonClass}>
-        Search
+        {buttonText}
       </Button>
     </form>
   );

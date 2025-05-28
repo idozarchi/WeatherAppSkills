@@ -1,14 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { HeaderProvider, HeaderContext } from "../context/HeaderContext";
 import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
 import WeatherContent from "../components/weather/WeatherContent";
-import HistoryContent from "../components/HistoryContent";
-import { getDefaultCity } from "../api/defaultLocation";
-import { fetchWeather } from "../api/weatherData";
-import { useQuery } from "@tanstack/react-query";
+import History from "./History";
+import { useHomeWeather } from "../hooks/useHomeWeather";
 import {
   appContainerClass,
   containerClass,
@@ -18,74 +16,42 @@ import {
 
 const HomeContent: React.FC = () => {
   const { setButtons } = useContext(HeaderContext);
-  const [city, setCity] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {
-    data: weather,
-    isLoading: loading,
+    city,
+    setCity,
+    isInitializing,
+    weather,
+    loading,
     isError,
-    refetch,
-  } = useQuery({
-    queryKey: ["weather", city],
-    queryFn: () => (city ? fetchWeather(city) : Promise.resolve(null)),
-    enabled: !!city,
-    refetchOnWindowFocus: false,
-  });
-
-  useEffect(() => {
-    setButtons([
-      { name: "Home", onClick: () => navigate("/") },
-      { name: "Search History", onClick: () => navigate("/history") },
-    ]);
-  }, [setButtons, navigate]);
-
-  useEffect(() => {
-    getDefaultCity().then((defaultCity) => {
-      if (defaultCity) setCity(defaultCity);
-    });
-  }, []);
-
-  const handleSearch = (newCity: string) => {
-    setCity(newCity);
-    refetch();
-
-    const history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-    if (
-      !history
-        .map((c: string) => c.toLowerCase())
-        .includes(newCity.toLowerCase())
-    ) {
-      history.unshift(newCity);
-      // Keep only the latest 20 searches
-      localStorage.setItem(
-        "searchHistory",
-        JSON.stringify(history.slice(0, 20))
-      );
-    }
-  };
-
-  const temperature = weather?.current_condition?.[0]?.temp_C || "";
-  const feelsLike = weather?.current_condition?.[0]?.FeelsLikeC || "";
-  const description =
-    weather?.current_condition?.[0]?.weatherDesc?.[0]?.value || "";
-  const country = weather?.nearest_area?.[0]?.country?.[0]?.value || "";
-  const isInvalidLocation = city && !loading && !temperature && !isError;
+    handleSearch,
+    temperature,
+    feelsLike,
+    description,
+    country,
+    isInvalidLocation,
+  } = useHomeWeather({ setButtons, navigate, location });
 
   return (
     <>
       <Header />
       <div className={containerClass}>
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar
+          onSearch={handleSearch}
+          placeholder="Search for a city..."
+          buttonText="Search"
+        />
         <Routes>
           <Route
             path="/"
             element={
               <>
-                {loading && (
+                {(isInitializing || loading) && (
                   <div className={loadingTextClass}>Loading weather...</div>
                 )}
-                {temperature && (
+                {!isInitializing && !loading && weather && (
                   <WeatherContent
                     city={city}
                     country={country}
@@ -94,7 +60,7 @@ const HomeContent: React.FC = () => {
                     description={description}
                   />
                 )}
-                {(isInvalidLocation || isError) && (
+                {!isInitializing && (isInvalidLocation || isError) && (
                   <div className={errorTextClass}>
                     Unable to detect your location. Please search for a city.
                   </div>
@@ -102,10 +68,14 @@ const HomeContent: React.FC = () => {
               </>
             }
           />
-          <Route path="/history" element={<HistoryContent />} />
+          <Route path="/history" element={<History />} />
         </Routes>
       </div>
-      <Footer />
+      <Footer
+        footerText={
+          "&" + new Date().getFullYear() + " Weather App. All rights reserved."
+        }
+      />
     </>
   );
 };

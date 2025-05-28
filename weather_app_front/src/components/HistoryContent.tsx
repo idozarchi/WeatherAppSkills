@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import ScrollArea from "./ui/ScrollArea";
 import getSearchHistory from "../api/getSearchHistory";
 import { Card, CardContent } from "./ui/Card";
-import Sonner from "./ui/Sonner"; // Import the Sonner component
+import Sonner from "./ui/Sonner";
+import { Text } from "./ui/Typography";
 import {
   containerClass,
   cardContentClass,
@@ -12,12 +13,22 @@ import {
   emptyTextClass,
   listClass,
 } from "../styles/tailwindStyles";
+import { useNavigate } from "react-router-dom";
 
-const USER_ID = "demo-user"; // Replace with real user id if available
+interface HistoryContentProps {
+  title?: string;
+  loadingText?: string;
+  emptyText?: string;
+}
 
-const HistoryContent: React.FC = () => {
+const HistoryContent: React.FC<HistoryContentProps> = ({
+  title = "",
+  loadingText = "Loading...",
+  emptyText = "Nothing yet...",
+}) => {
   const [history, setHistory] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getSearchHistory().then((data) => {
@@ -26,21 +37,38 @@ const HistoryContent: React.FC = () => {
     });
   }, []);
 
+  const handleHistoryClick = (city: string) => {
+    navigate("/", { state: { city } });
+  };
+
   return (
     <div className={containerClass}>
       <Card>
         <CardContent className={cardContentClass}>
-          <h2 className={titleClass}>Search History</h2>
+          <Text className={titleClass}>{title}</Text>
           <ScrollArea className={scrollAreaClass}>
             {loading ? (
-              <div className={loadingTextClass}>Loading...</div>
+              <Text className={loadingTextClass}>{loadingText}</Text>
             ) : history.length === 0 ? (
-              <div className={emptyTextClass}>No search history yet.</div>
+              <Text className={emptyTextClass}>{emptyText}</Text>
             ) : (
               <ul className={listClass}>
                 {history.map((item, idx) => (
                   <li key={idx}>
-                    <Sonner>{item}</Sonner>
+                    <button
+                      type="button"
+                      onClick={() => handleHistoryClick(item)}
+                      style={{
+                        cursor: "pointer",
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        width: "100%",
+                        textAlign: "left",
+                      }}
+                    >
+                      <Sonner>{item}</Sonner>
+                    </button>
                   </li>
                 ))}
               </ul>
