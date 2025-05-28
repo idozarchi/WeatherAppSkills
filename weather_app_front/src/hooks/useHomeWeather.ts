@@ -1,8 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getDefaultCity } from "../api/defaultLocation";
 import { fetchWeather } from "../api/weatherData";
+import { parseWeather } from "../api/parseWeather";
+import { isInvalidLocation as getIsInvalidLocation } from "../api/isInvalidLocation";
 import { useSearchHistory } from "../hooks/useSearchHistory";
+import { useHeaderButtons } from "../hooks/useHeaderButtons";
+import { useDefaultCity } from "../hooks/useDefaultCity";
+import { useLocationStateHandler } from "../hooks/useLocationStateHandler";
 import { Location, NavigateFunction } from "react-router-dom";
 
 interface ButtonConfig {
@@ -16,7 +20,7 @@ interface UseHomeWeatherParams {
   location: Location & { state?: { city?: string } };
 }
 
-interface WeatherApiResponse {
+export interface WeatherApiResponse {
   current_condition?: Array<{
     temp_C?: string;
     FeelsLikeC?: string;
@@ -27,14 +31,13 @@ interface WeatherApiResponse {
   }>;
 }
 
-export function useHomeWeather({
+export const useHomeWeather = ({
   setButtons,
   navigate,
   location,
-}: UseHomeWeatherParams) {
+}: UseHomeWeatherParams) => {
   const [city, setCity] = useState("");
   const [isInitializing, setIsInitializing] = useState(true);
-
   const { addToHistory } = useSearchHistory();
 
   const {
@@ -47,20 +50,6 @@ export function useHomeWeather({
     enabled: !!city,
     refetchOnWindowFocus: false,
   });
-
-  useEffect(() => {
-    setButtons([
-      { name: "Home", onClick: () => navigate("/") },
-      { name: "Search History", onClick: () => navigate("/history") },
-    ]);
-  }, [setButtons, navigate]);
-
-  useEffect(() => {
-    getDefaultCity().then((defaultCity) => {
-      if (defaultCity) setCity(defaultCity);
-      setIsInitializing(false);
-    });
-  }, []);
 
   const handleSearch = useCallback(
     (newCity: string) => {
@@ -75,20 +64,18 @@ export function useHomeWeather({
     [location.pathname, navigate, addToHistory]
   );
 
-  useEffect(() => {
-    if (location.state?.city) {
-      handleSearch(location.state.city);
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state, handleSearch]);
+  useHeaderButtons(setButtons, navigate);
+  useDefaultCity(setCity, setIsInitializing);
+  useLocationStateHandler(location, handleSearch);
 
-  const temperature = weather?.current_condition?.[0]?.temp_C + "°C" || "";
-  const feelsLike =
-    "Feels like: " + (weather?.current_condition?.[0]?.FeelsLikeC + "°C") || "";
-  const description =
-    weather?.current_condition?.[0]?.weatherDesc?.[0]?.value || "";
-  const country = weather?.nearest_area?.[0]?.country?.[0]?.value || "";
-  const isInvalidLocation = city && !loading && !temperature && !isError;
+  const { temperature, feelsLike, description, country } =
+    parseWeather(weather);
+  const isInvalidLocation = getIsInvalidLocation(
+    city,
+    loading,
+    temperature,
+    isError
+  );
 
   return {
     city,
@@ -104,4 +91,4 @@ export function useHomeWeather({
     country,
     isInvalidLocation,
   };
-}
+};
